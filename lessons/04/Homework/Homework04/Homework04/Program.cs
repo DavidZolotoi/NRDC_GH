@@ -22,8 +22,10 @@ namespace Homework04
 
         static void Main(string[] args)
         {
+            // Console.WriteLine(Convert.ToString(0x1 << 2, 2));
+
             // Приветствие
-             Console.WriteLine("Выберите цвета из палитры для добавления в 'Избранное':");
+            Console.WriteLine("Выберите цвета из палитры для добавления в 'Избранное':");
 
             // Через while и игру с битами
             ColorAll a =ColorAll.N1_Black;
