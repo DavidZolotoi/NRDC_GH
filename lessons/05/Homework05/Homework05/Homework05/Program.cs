@@ -9,6 +9,7 @@ namespace Homework05
 
 		static void Main(string[] args)
 		{
+			// Чисто из разнообразия ввод точности не стал вставлять в try..catch, а использовал бесконечный цикл
 			var accuracyCalculations=-1;
 			while (accuracyCalculations < 0 || accuracyCalculations > 10)
 			{ 
@@ -16,6 +17,7 @@ namespace Homework05
 			}
 
 			Console.WriteLine("Список фигур:\n1. Круг,\n2. Равносторонний треугольник,\n3. Прямоугольник.");
+
 			var figure = (Figure)ReadDouble("номер фигуры:", 0);
 
 			switch (figure)
@@ -40,9 +42,17 @@ namespace Homework05
 					Console.WriteLine($"Площадь прямоугольника: {Math.Round(b1*b2, accuracyCalculations, MidpointRounding.AwayFromZero)}");
 					break;
 				default:
-					WriteWithColor("Не удалось выбрать фигуру.", ConsoleColor.Red);
+					// немного поигрался с выбросом и отловом собственного исключения
+					try
+					{
+						throw new Exception("Не удалось выбрать фигуру. Пожалуйста перезапустите программу для корректного выбора фигуры.");
+					}
+					catch (Exception exception)
+					{
+						WriteWithColor(exception.Message, ConsoleColor.Red);
+					}
 					break;
-            }
+			}
 		}
 
 		// Метод для ввода значения double с указанием кол-ва знаков после запятой и проверкой значений
@@ -55,19 +65,23 @@ namespace Homework05
 					Console.WriteLine($"Введите {name}");
 					return Math.Round(double.Parse(Console.ReadLine()), accuracy, MidpointRounding.AwayFromZero);
 				}
-				catch (ArgumentNullException exception)
-				{
-					WriteWithColor("Пожалуйста, введите число корректно.\n" + exception.Message, ConsoleColor.Red);
-				}
-				catch (FormatException exception)
+				catch (Exception exception) when (exception is ArgumentNullException || exception is FormatException)     //double.Parse()
 				{
 					WriteWithColor("Не удаётся распознать число. Пожалуйста, введите число корректно.\n" + exception.Message, ConsoleColor.Red);
 				}
-				catch (OverflowException exception)
+				catch (OverflowException exception)             //double.Parse()
 				{
 					WriteWithColor("Введенное значение выходит за пределы допустимых.\n" +
 								   "Пожалуйста введите значение в пределах от " + double.MinValue + " до " + double.MaxValue + ".\n" +
 								   exception.Message, ConsoleColor.Red);
+				}
+				catch (ArgumentOutOfRangeException exception)   //Console.ReadLine(), Math.Round()
+				{
+					WriteWithColor("Слишком большое количество символов\n" + exception.Message, ConsoleColor.Red);
+				}
+				catch (ArgumentException exception)              //double.Parse(), Math.Round()
+				{
+					WriteWithColor("Что-то пошло не так, возможно не удаётся распознать способ округления.\n" + exception.Message, ConsoleColor.Red);
 				}
 			}
 		}
