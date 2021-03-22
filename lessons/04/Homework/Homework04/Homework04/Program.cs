@@ -42,7 +42,7 @@ namespace Homework04
                 Console.Write($"Добавить цвет №");
                 try
                 {
-                    colorFavorites = (Color)((short)colorFavorites | (short)Math.Pow(2, short.Parse(Console.ReadLine()) - 1));    // т.к. пользователь вводит №, а программа принимает 2^(№-1)
+                    colorFavorites = (Color)((short)colorFavorites | (short)(1 << Int32.Parse(Console.ReadLine())-1));    // т.к. пользователь вводит №, а программа принимает 2^(№-1)
                 }
                 catch (Exception ex) when (ex is ArgumentNullException || ex is FormatException || ex is OverflowException)
                 {
