@@ -20,7 +20,7 @@ namespace Classwork05
                         ? "года"
                         : "лет";
 
-                Console.WriteLine($"Человеку {age} {god}.");
+                Console.WriteLine($"Человеку {age} {god}. ");
 
             }
 
