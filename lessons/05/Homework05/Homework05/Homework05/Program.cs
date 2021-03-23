@@ -18,7 +18,7 @@ namespace Homework05
 
 			Console.WriteLine("Список фигур:\n1. Круг,\n2. Равносторонний треугольник,\n3. Прямоугольник.");
 
-			var figure = (Figure)ReadDouble("номер фигуры:", 0);
+			var figure = ReadEnum("фигуру (№ или наименование):");
 
 			switch (figure)
             {
@@ -55,6 +55,21 @@ namespace Homework05
 			}
 		}
 
+		// Метод для ввода вида фигуры
+		static Enum ReadEnum(string name)										
+		{
+			try
+			{
+			Console.Write($"Введите {name}:");
+			return (Enum)Enum.Parse(typeof(Figure), Console.ReadLine());        // ????
+			}
+			catch																// разобрать конкретные
+            {
+				WriteWithColor("Не удалось распознать фигуру. Попробоуйте выбрать еще раз. Необходимо ввести № или наименование фигуры.", ConsoleColor.Red);
+				// Что-то надо вернуть???
+            }
+		}
+
 		// Метод для ввода значения double с указанием кол-ва знаков после запятой и проверкой значений
 		static double ReadDouble(string name, int accuracy)
 		{
@@ -62,7 +77,7 @@ namespace Homework05
 			{
 				try
 				{
-					Console.WriteLine($"Введите {name}");
+					Console.Write($"Введите {name}");
 					return Math.Round(double.Parse(Console.ReadLine()), accuracy, MidpointRounding.AwayFromZero);
 				}
 				catch (Exception exception) when (exception is ArgumentNullException || exception is FormatException)     //double.Parse()
