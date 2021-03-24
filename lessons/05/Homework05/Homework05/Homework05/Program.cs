@@ -10,15 +10,16 @@ namespace Homework05
 		static void Main(string[] args)
 		{
 			// Чисто из разнообразия ввод точности не стал вставлять в try..catch, а использовал бесконечный цикл
-			var accuracyCalculations=-1;
-			while (accuracyCalculations < 0 || accuracyCalculations > 10)
+			int accuracyCalculations;
+			do
 			{ 
 				accuracyCalculations = (int)ReadDouble("точность расчётов (количество знаков после запятой (от 0 до 10)):", 0);
 			}
+			while (accuracyCalculations < 0 || accuracyCalculations > 10) ;
 
 			Console.WriteLine("Список фигур:\n1. Круг,\n2. Равносторонний треугольник,\n3. Прямоугольник.");
 
-			var figure = ReadEnum("фигуру (№ или наименование):");
+			var figure = ReadEnum("фигуру (№ от 1 до 3 или наименование):");
 
 			switch (figure)
             {
@@ -41,33 +42,39 @@ namespace Homework05
 					Console.WriteLine($"Периметр прямоугольника: {Math.Round(2.0*(b1+b2), accuracyCalculations, MidpointRounding.AwayFromZero)}");
 					Console.WriteLine($"Площадь прямоугольника: {Math.Round(b1*b2, accuracyCalculations, MidpointRounding.AwayFromZero)}");
 					break;
-				default:
-					// немного поигрался с выбросом и отловом собственного исключения
-					try
-					{
-						throw new Exception("Не удалось выбрать фигуру. Пожалуйста перезапустите программу для корректного выбора фигуры.");
-					}
-					catch (Exception exception)
-					{
-						WriteWithColor(exception.Message, ConsoleColor.Red);
-					}
-					break;
 			}
 		}
 
-		// Метод для ввода вида фигуры
-		static Enum ReadEnum(string name)										
+		// Метод для ввода вида фигуры (enum)
+		static Figure ReadEnum(string name)										
 		{
-			try
+			for ( ; ; )
 			{
-			Console.Write($"Введите {name}:");
-			return (Enum)Enum.Parse(typeof(Figure), Console.ReadLine());        // ????
+				try
+				{
+					// Проверка на ввод в рамках [1..3] - Figure
+					Figure fig;
+					do
+					{
+						Console.Write($"Введите {name}");
+						fig = (Figure)Enum.Parse(typeof(Figure), Console.ReadLine());
+					}
+					while ( (int)fig<1 || (int)fig>3 );                     //(!((int)fig >= 1 && (int)fig <= 3));	
+					return fig;
+				}
+				catch (ArgumentOutOfRangeException exception)   //Console.ReadLine()
+				{
+					WriteWithColor("Слишком большое количество символов\n" + exception.Message, ConsoleColor.Red);
+				}
+				catch (Exception exception) when (exception is ArgumentNullException || exception is ArgumentException)     //Enum.Parse()
+				{
+					WriteWithColor("Не удаётся распознать число. Пожалуйста, попробуйте еще раз.\n" + exception.Message, ConsoleColor.Red);
+				}
+				catch (OverflowException exception)             //Enum.Parse()
+				{
+					WriteWithColor("Введенное значение выходит за пределы допустимых. Пожалуйста, попробуйте еще раз.\n" + exception.Message, ConsoleColor.Red);
+				}
 			}
-			catch																// разобрать конкретные
-            {
-				WriteWithColor("Не удалось распознать фигуру. Попробоуйте выбрать еще раз. Необходимо ввести № или наименование фигуры.", ConsoleColor.Red);
-				// Что-то надо вернуть???
-            }
 		}
 
 		// Метод для ввода значения double с указанием кол-ва знаков после запятой и проверкой значений
@@ -112,3 +119,14 @@ namespace Homework05
 
 	}
 }
+
+//default:        // немного поигрался с выбросом и отловом собственного исключения. НО ЭТОТ КОД НЕ НУЖЕН И НЕКОРРЕКТЕН!!!
+//	try
+//	{
+//		throw new Exception("Не удалось выбрать фигуру. Пожалуйста перезапустите программу для корректного выбора фигуры.");
+//	}
+//	catch (Exception exception)
+//	{
+//		WriteWithColor(exception.Message, ConsoleColor.Red);
+//	}
+//	break;
