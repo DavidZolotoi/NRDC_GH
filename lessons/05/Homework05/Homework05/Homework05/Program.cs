@@ -9,13 +9,17 @@ namespace Homework05
 
 		static void Main(string[] args)
 		{
-			// Чисто из разнообразия ввод точности не стал вставлять в try..catch, а использовал бесконечный цикл
-			int accuracyCalculations;
+			// Проверка на ввод в рамках [0..10] - int
+			int accuracyCalculation;
+			bool accurCalcReadResult;
 			do
 			{ 
-				accuracyCalculations = (int)ReadDouble("точность расчётов (количество знаков после запятой (от 0 до 10)):", 0);
+				accuracyCalculation = (int)ReadDouble("точность расчётов (количество знаков после запятой (от 0 до 10)):", 0);
+				accurCalcReadResult = (accuracyCalculation<0) || (accuracyCalculation>10);
+				if (accurCalcReadResult)
+					WriteWithColor("Введенное значение выходит за пределы допустимых.", ConsoleColor.Red);
 			}
-			while (accuracyCalculations < 0 || accuracyCalculations > 10) ;
+			while (accurCalcReadResult) ;
 
 			Console.WriteLine("Список фигур:\n1. Круг,\n2. Равносторонний треугольник,\n3. Прямоугольник.");
 
@@ -25,22 +29,22 @@ namespace Homework05
             {
 				case Figure.Сircle:
                     Console.WriteLine("Выбрана окружность:");
-					double r = ReadDouble("радиус:", accuracyCalculations);
-					Console.WriteLine($"Длина окружности: {Math.Round(2.0 * Math.PI * r, accuracyCalculations, MidpointRounding.AwayFromZero)}");
-					Console.WriteLine($"Площадь окружности: {Math.Round(Math.PI * r * r, accuracyCalculations, MidpointRounding.AwayFromZero)}");
+					double r = ReadDouble("радиус:", accuracyCalculation);
+					Console.WriteLine($"Длина окружности: {Math.Round(2.0 * Math.PI * r, accuracyCalculation, MidpointRounding.AwayFromZero)}");
+					Console.WriteLine($"Площадь окружности: {Math.Round(Math.PI * r * r, accuracyCalculation, MidpointRounding.AwayFromZero)}");
 					break;
 				case Figure.Triangle:
 					Console.WriteLine("Выбран равносторонний треугольник:");
-					double a = ReadDouble("длину стороны:", accuracyCalculations);
-					Console.WriteLine($"Периметр треугольника: {Math.Round(3.0*a, accuracyCalculations, MidpointRounding.AwayFromZero)}");
-					Console.WriteLine($"Площадь треугольника: {Math.Round(a*a*Math.Sqrt(3)/4, accuracyCalculations, MidpointRounding.AwayFromZero)}");
+					double a = ReadDouble("длину стороны:", accuracyCalculation);
+					Console.WriteLine($"Периметр треугольника: {Math.Round(3.0*a, accuracyCalculation, MidpointRounding.AwayFromZero)}");
+					Console.WriteLine($"Площадь треугольника: {Math.Round(a*a*Math.Sqrt(3)/4, accuracyCalculation, MidpointRounding.AwayFromZero)}");
 					break;
 				case Figure.Rectangle:
 					Console.WriteLine("Выбран прямоугольник:");
-					double b1 = ReadDouble("длину 1-й стороны:", accuracyCalculations);
-					double b2 = ReadDouble("длину 2-й стороны:", accuracyCalculations);
-					Console.WriteLine($"Периметр прямоугольника: {Math.Round(2.0*(b1+b2), accuracyCalculations, MidpointRounding.AwayFromZero)}");
-					Console.WriteLine($"Площадь прямоугольника: {Math.Round(b1*b2, accuracyCalculations, MidpointRounding.AwayFromZero)}");
+					double b1 = ReadDouble("длину 1-й стороны:", accuracyCalculation);
+					double b2 = ReadDouble("длину 2-й стороны:", accuracyCalculation);
+					Console.WriteLine($"Периметр прямоугольника: {Math.Round(2.0*(b1+b2), accuracyCalculation, MidpointRounding.AwayFromZero)}");
+					Console.WriteLine($"Площадь прямоугольника: {Math.Round(b1*b2, accuracyCalculation, MidpointRounding.AwayFromZero)}");
 					break;
 			}
 		}
@@ -54,12 +58,15 @@ namespace Homework05
 				{
 					// Проверка на ввод в рамках [1..3] - Figure
 					Figure fig;
+					bool figReadResult;
 					do
 					{
 						Console.Write($"Введите {name}");
 						fig = (Figure)Enum.Parse(typeof(Figure), Console.ReadLine());
+						figReadResult = ( (int)fig<1 ) || ( (int)fig>3 );
+						if (figReadResult) WriteWithColor("Введенное значение выходит за пределы допустимых.", ConsoleColor.Red);
 					}
-					while ( (int)fig<1 || (int)fig>3 );                     //(!((int)fig >= 1 && (int)fig <= 3));	
+					while (figReadResult);                     //(!((int)fig >= 1 && (int)fig <= 3));	
 					return fig;
 				}
 				catch (ArgumentOutOfRangeException exception)   //Console.ReadLine()
