@@ -9,17 +9,8 @@ namespace Homework05
 
 		static void Main(string[] args)
 		{
-			// Проверка на ввод в рамках [0..10] - int
-			int accuracyCalculation;
-			bool accurCalcReadResult;
-			do
-			{ 
-				accuracyCalculation = (int)ReadDouble("точность расчётов (количество знаков после запятой (от 0 до 10)):", 0);
-				accurCalcReadResult = (accuracyCalculation<0) || (accuracyCalculation>10);
-				if (accurCalcReadResult)
-					WriteWithColor("Введенное значение выходит за пределы допустимых.", ConsoleColor.Red);
-			}
-			while (accurCalcReadResult) ;
+			// Ввод точности через проверка на ввод в рамках [0..10] - int
+			int accuracyCalculation=(int)ReadInSpacing(0, 10, "точность расчётов (количество знаков после запятой (от 0 до 10)):");
 
 			Console.WriteLine("Список фигур:\n1. Круг,\n2. Равносторонний треугольник,\n3. Прямоугольник.");
 
@@ -49,6 +40,32 @@ namespace Homework05
 			}
 		}
 
+		// Метод проверки на соответствие числа промежутку, выдает object, значение которого - целое число
+		static object ReadInSpacing (int spaceMin, int spaceMax, string name)
+		{
+	        int chislo;
+			bool readResult;
+			do
+			{
+				double chisloDouble = ReadDouble(name, 1);
+				chislo = (int)chisloDouble;
+				readResult = (chislo<spaceMin) || (chislo>spaceMax);
+
+				// Проверка на соответствие промежутку
+				if (readResult)
+					WriteWithColor("Введенное значение выходит за пределы допустимых.", ConsoleColor.Red);
+
+				// Проверка на целочисленность
+				if (chisloDouble != double.Parse(((int)chisloDouble).ToString()))    // => число дробное
+				{
+					WriteWithColor("Введенное значение должно быть целочисленным", ConsoleColor.Red);
+					readResult = true;
+				}
+			}
+			while (readResult) ;
+			return chislo;
+		}
+
 		// Метод для ввода вида фигуры (enum)
 		static Figure ReadEnum(string name)										
 		{
@@ -56,17 +73,8 @@ namespace Homework05
 			{
 				try
 				{
-					// Проверка на ввод в рамках [1..3] - Figure
-					Figure fig;
-					bool figReadResult;
-					do
-					{
-						Console.Write($"Введите {name}");
-						fig = (Figure)Enum.Parse(typeof(Figure), Console.ReadLine());
-						figReadResult = ( (int)fig<1 ) || ( (int)fig>3 );
-						if (figReadResult) WriteWithColor("Введенное значение выходит за пределы допустимых.", ConsoleColor.Red);
-					}
-					while (figReadResult);                     //(!((int)fig >= 1 && (int)fig <= 3));	
+					// Проверка на ввод фигуры в рамках [1..3] - Figure
+					Figure fig = (Figure)ReadInSpacing(1, 3, name);
 					return fig;
 				}
 				catch (ArgumentOutOfRangeException exception)   //Console.ReadLine()
@@ -123,7 +131,6 @@ namespace Homework05
 			Console.WriteLine(message);
 			Console.ForegroundColor = restoreColor;
 		}
-
 	}
 }
 
@@ -137,3 +144,26 @@ namespace Homework05
 //		WriteWithColor(exception.Message, ConsoleColor.Red);
 //	}
 //	break;
+
+
+// Проверка на ввод точности в рамках [0..10] - int	// Позднее сделал метод ReadInSpacing(,,)
+//bool accurCalcReadResult;
+//do
+//{ 
+//	accuracyCalculation = (int)ReadDouble("точность расчётов (количество знаков после запятой (от 0 до 10)):", 0);
+//	accurCalcReadResult = (accuracyCalculation<0) || (accuracyCalculation>10);
+//	if (accurCalcReadResult)
+//		WriteWithColor("Введенное значение выходит за пределы допустимых.", ConsoleColor.Red);
+//}
+//while (accurCalcReadResult) ;
+
+// Проверка на ввод фигуры в рамках [1..3] - Figure
+//bool figReadResult;
+//do
+//{
+//	Console.Write($"Введите {name}");
+//	fig = (Figure)Enum.Parse(typeof(Figure), Console.ReadLine());
+//	figReadResult = ( (int)fig<1 ) || ( (int)fig>3 );
+//	if (figReadResult) WriteWithColor("Введенное значение выходит за пределы допустимых.", ConsoleColor.Red);
+//}
+//while (figReadResult);                     //(!((int)fig >= 1 && (int)fig <= 3));	
