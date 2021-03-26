@@ -61,7 +61,7 @@ namespace Classwork06
                 medianj = Math.Round((double)sj / marks[i].Length, 2, MidpointRounding.AwayFromZero);
                 Console.WriteLine($"Сумма за {i+1}-й день = {sj}");
                 Console.WriteLine($"Среднее за {i+1}-й день = {medianj}");
-                Console.WriteLine("");
+                Console.WriteLine("");  // эксперимент
 
                 s += sj;
                 k += marks[i].Length;
