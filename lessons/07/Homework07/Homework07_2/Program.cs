@@ -7,7 +7,9 @@ namespace Homework07_2
     {
         static void Main(string[] args)
         {
-            Console.WriteLine(ReverseString(ReadStringNotEmpty()).ToLower());
+            Console.WriteLine(
+                              ReverseString( ReadStringNotEmpty("непустую строку, содержащую хотя бы 1 печатную букву: ") ).ToLower()
+                             );
         }
 
         // Метод для отражения string с помощью массива StringBuilder
@@ -36,12 +38,12 @@ namespace Homework07_2
         }
 
         // Метод для ввода непустой строки с доп.проверкой на наличие печатных букв
-        static string ReadStringNotEmpty()
+        static string ReadStringNotEmpty(string cwTxt)
         {
             string textString;
             for (; ; )
             {
-                textString = ReadString("непустую строку, содержащую хотя бы 1 печатную букву:");
+                textString = ReadString(cwTxt);
                 // проверка на пустоту
                 if (string.IsNullOrWhiteSpace(textString))
                 {
