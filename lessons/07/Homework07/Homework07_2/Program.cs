@@ -61,7 +61,7 @@ namespace Homework07_2
                     // Проверка на наличие печатных букв
                     bool pechatnie=false;
                     foreach (var s in textCR)
-                        if (!char.IsWhiteSpace(s)) pechatnie |= char.IsUpper(s);
+                        pechatnie = char.IsWhiteSpace(s) ? pechatnie : pechatnie |= char.IsUpper(s);
 
                     if (!pechatnie)
                     {
