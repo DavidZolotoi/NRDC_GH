@@ -8,8 +8,10 @@ namespace Homework07_2
         static void Main(string[] args)
         {
             Console.WriteLine(
-                              ReverseString( ReadStringNotEmpty("непустую строку, содержащую хотя бы 1 печатную букву: ") ).ToLower()
-                             );
+                ReverseString(
+                        ReadString("непустую строку, содержащую хотя бы 1 печатную букву: ")
+                    ).ToLower()
+                    );
         }
 
         // Метод для отражения string с помощью массива StringBuilder
@@ -37,54 +39,36 @@ namespace Homework07_2
             }
         }
 
-        // Метод для ввода непустой строки с доп.проверкой на наличие печатных букв
-        static string ReadStringNotEmpty(string cwTxt)
-        {
-            string textString;
-            for (; ; )
-            {
-                textString = ReadString(cwTxt);
-                // проверка на пустоту
-                if (string.IsNullOrWhiteSpace(textString))
-                {
-                    WriteWithColor("Введенный текст пустой.", ConsoleColor.Red);
-                    continue;
-                }
-                // проверка на наличие печатных букв
-                if (textString == textString.ToLower())
-                {
-                    WriteWithColor("Введенный текст не имеет ни одной печатной буквы.", ConsoleColor.Red);
-                    continue;
-                }
-                return textString;
-            }
-        }
-
-        // Метод разбивки текста на массив по разделителям с обработкой исключений
-        static string[] SplitText(string text)
-        {
-            for (; ; )
-            {
-                try
-                {
-                    return text.Split(new[] { ' ', '\t', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-                }
-                catch (ArgumentException exception)
-                {
-                    WriteWithColor("Что-то пошло не так, попробуйте ввести что-нибудь другое.\n" + exception.Message, ConsoleColor.Red);
-                }
-            }
-        }
-
-        // Метод для ввода String с обработкой ошибок
+        // Метод для ввода текста с проверкой на пустоту, печатные буквы, обработкой искл. и возвратом текста
         static string ReadString(string name)
         {
+            string textCR; bool pustoi;
             for (; ; )
             {
                 try
                 {
                     Console.Write($"Введите {name}");
-                    return Console.ReadLine();
+                    textCR = Console.ReadLine();
+
+                    // Проверка на пустоты
+                    pustoi = string.IsNullOrWhiteSpace(textCR);
+                    if (pustoi)
+                    {
+                        WriteWithColor("Введенный текст не имеет смысла.", ConsoleColor.Red);
+                        continue;
+                    }
+
+                    // Проверка на наличие печатных букв
+                    bool pechatnie=false;
+                    foreach (var s in textCR)
+                        if (!char.Equals(s, ' ')) pechatnie |= !char.IsLower(s);
+
+                    if (!pechatnie)
+                    {
+                        WriteWithColor("Введенный текст не имеет печатных букв.", ConsoleColor.Red);
+                        continue;
+                    }
+                    return textCR;
                 }
                 catch (ArgumentOutOfRangeException exception)   //Console.ReadLine()
                 {
@@ -101,5 +85,40 @@ namespace Homework07_2
             Console.WriteLine(message);
             Console.ForegroundColor = restoreColor;
         }
+
+
+        //// Метод разбивки текста на массив по разделителям с обработкой исключений
+        //static string[] SplitText(string text)
+        //{
+        //    for (; ; )
+        //    {
+        //        try
+        //        {
+        //            return text.Split(new[] { ' ', '\t', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+        //        }
+        //        catch (ArgumentException exception)
+        //        {
+        //            WriteWithColor("Что-то пошло не так, попробуйте ввести что-нибудь другое.\n" + exception.Message, ConsoleColor.Red);
+        //        }
+        //    }
+        //}
+
+        //// Метод для ввода String с обработкой ошибок
+        //static string ReadString(string name)
+        //{
+        //    for (; ; )
+        //    {
+        //        try
+        //        {
+        //            Console.Write($"Введите {name}");
+        //            return Console.ReadLine();
+        //        }
+        //        catch (ArgumentOutOfRangeException exception)   //Console.ReadLine()
+        //        {
+        //            WriteWithColor("Слишком большое количество символов\n" + exception.Message, ConsoleColor.Red);
+        //        }
+        //    }
+        //}
+
     }
 }
