@@ -35,7 +35,7 @@ namespace Homework07
                 {
                     return text.Split(new[] { ' ', '\t', '\n' }, StringSplitOptions.RemoveEmptyEntries);
                 }
-                catch (ArgumentException exception)
+                catch (ArgumentException exception)     // .Split()
                 {
                     WriteWithColor("Что-то пошло не так, попробуйте ввести что-нибудь другое.\n" + exception.Message, ConsoleColor.Red);
                 }
@@ -56,6 +56,10 @@ namespace Homework07
                 {
                     WriteWithColor("Слишком большое количество символов\n" + exception.Message, ConsoleColor.Red);
                 }
+                //catch (ArgumentException exception)             // .Split()
+                //{
+                //    WriteWithColor("Что-то пошло не так, попробуйте ввести что-нибудь другое.\n" + exception.Message, ConsoleColor.Red);
+                //}
             }
         }
 
