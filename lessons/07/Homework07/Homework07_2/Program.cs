@@ -17,25 +17,23 @@ namespace Homework07_2
         // Метод для отражения string с помощью массива StringBuilder
         static string ReverseString(string textString)
         {
-            for (; ; )
+            try
             {
-                try
-                {
-                    var textStringBuilder = new StringBuilder(textString, 500);
-                    int lehgthSb = textStringBuilder.Length;
-                    char tempSb;
-                    for (int i = 0; i < lehgthSb / 2; i++)
-                    {
-                        tempSb = textStringBuilder[i];
-                        textStringBuilder[i] = textStringBuilder[lehgthSb - i - 1];
-                        textStringBuilder[lehgthSb - i - 1] = tempSb;
-                    }
-                    return string.Join("", textStringBuilder);
-                }
-                catch (ArgumentOutOfRangeException exception)
-                {
-                    WriteWithColor("Что-то пошло не так. Возможно слишком большое количество символов, но это не точно.\n" + exception.Message, ConsoleColor.Red);
-                }
+               var textStringBuilder = new StringBuilder(textString, 500);
+               int lehgthSb = textStringBuilder.Length;
+               char tempSb;
+               for (int i = 0; i < lehgthSb / 2; i++)
+               {
+                   tempSb = textStringBuilder[i];
+                   textStringBuilder[i] = textStringBuilder[lehgthSb - i - 1];
+                   textStringBuilder[lehgthSb - i - 1] = tempSb;
+               }
+               return string.Join("", textStringBuilder);
+            }
+            catch (ArgumentOutOfRangeException exception)
+            {
+                WriteWithColor("Что-то пошло не так. Возможно слишком большое количество символов, но это не точно.\n" + exception.Message, ConsoleColor.Red);
+                return "-1";
             }
         }
 
@@ -54,15 +52,24 @@ namespace Homework07_2
                     pustoi = string.IsNullOrWhiteSpace(textCR);
                     if (pustoi)
                     {
-                        WriteWithColor("Введенный текст не имеет смысла.", ConsoleColor.Red);
+                        WriteWithColor("Введенный текст пустой.", ConsoleColor.Red);
                         continue;
                     }
 
-                    // Проверка на наличие печатных букв
-                    bool pechatnie=false;
+                    // Проверка на наличие букв и печатных букв
+                    bool bukva = false, pechatnie = false;
                     foreach (var s in textCR)
-                        pechatnie = char.IsWhiteSpace(s) ? pechatnie : pechatnie |= char.IsUpper(s);
-
+                    {
+                        // Проверка на наличие букв
+                        if (char.IsLetter(s)) bukva |= true;        // bukva = char.IsLetter(s) ? bukva |= true : bukva;
+                        // Проверка на наличие печатных
+                        if (bukva) pechatnie |= char.IsUpper(s);    // pechatnie = char.IsWhiteSpace(s) ? pechatnie : pechatnie |= char.IsUpper(s);
+                    }
+                    if (!bukva)
+                    {
+                        WriteWithColor("Введенный текст не имеет букв алфавита.", ConsoleColor.Red);
+                        continue;
+                    }
                     if (!pechatnie)
                     {
                         WriteWithColor("Введенный текст не имеет печатных букв.", ConsoleColor.Red);
