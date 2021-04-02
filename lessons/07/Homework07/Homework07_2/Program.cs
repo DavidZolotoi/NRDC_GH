@@ -17,24 +17,16 @@ namespace Homework07_2
         // Метод для отражения string с помощью массива StringBuilder
         static string ReverseString(string textString)
         {
-            try
+            var textStringBuilder = new StringBuilder(textString, 500);
+            int lehgthSb = textStringBuilder.Length;
+            char tempSb;
+            for (int i = 0; i < lehgthSb / 2; i++)
             {
-               var textStringBuilder = new StringBuilder(textString, 500);
-               int lehgthSb = textStringBuilder.Length;
-               char tempSb;
-               for (int i = 0; i < lehgthSb / 2; i++)
-               {
-                   tempSb = textStringBuilder[i];
-                   textStringBuilder[i] = textStringBuilder[lehgthSb - i - 1];
-                   textStringBuilder[lehgthSb - i - 1] = tempSb;
-               }
-               return string.Join("", textStringBuilder);
+                tempSb = textStringBuilder[i];
+                textStringBuilder[i] = textStringBuilder[lehgthSb - i - 1];
+                textStringBuilder[lehgthSb - i - 1] = tempSb;
             }
-            catch (ArgumentOutOfRangeException exception)
-            {
-                WriteWithColor("Что-то пошло не так. Возможно слишком большое количество символов, но это не точно.\n" + exception.Message, ConsoleColor.Red);
-                return "-1";
-            }
+            return textStringBuilder.ToString();              //string.Join("", textStringBuilder);
         }
 
         // Метод для ввода текста с проверкой на пустоту, печатные буквы, обработкой искл. и возвратом текста
@@ -93,6 +85,28 @@ namespace Homework07_2
             Console.ForegroundColor = restoreColor;
         }
 
+        //// Метод для отражения string с помощью массива StringBuilder
+        //static string ReverseString(string textString)
+        //{
+        //    try
+        //    {
+        //        var textStringBuilder = new StringBuilder(textString, 500);
+        //        int lehgthSb = textStringBuilder.Length;
+        //        char tempSb;
+        //        for (int i = 0; i < lehgthSb / 2; i++)
+        //        {
+        //            tempSb = textStringBuilder[i];
+        //            textStringBuilder[i] = textStringBuilder[lehgthSb - i - 1];
+        //            textStringBuilder[lehgthSb - i - 1] = tempSb;
+        //        }
+        //        return textStringBuilder.ToString();              //string.Join("", textStringBuilder);
+        //    }
+        //    catch (ArgumentOutOfRangeException exception)
+        //    {
+        //        WriteWithColor("Что-то пошло не так. Возможно слишком большое количество символов, но это не точно.\n" + exception.Message, ConsoleColor.Red);
+        //        return "-1";
+        //    }
+        //}
 
         //// Метод разбивки текста на массив по разделителям с обработкой исключений
         //static string[] SplitText(string text)
