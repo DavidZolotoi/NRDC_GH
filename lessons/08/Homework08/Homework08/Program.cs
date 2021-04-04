@@ -44,13 +44,13 @@ namespace Homework08
             foreach (var s in textCR)
             {
                 if (dictKeys.Contains(s))           // 1. ЕСЛИ текущий символ относится к ключам (открывающим скобкам)
-                {
-                    stackSkobky.Push(s);                                                                        // То положить на стек открывающую скобку
-                    bResult = true;                                                                             // И зафиксировать факт того, что в стек когда-то что-то было положено
+                {                                                                                               // ТО
+                    stackSkobky.Push(s);                                                                        // То положить на стек открывающую скобку, ждущую закрытия
+                    bResult = true;                                                                             // И зафиксировать факт того, что в стек положили открывающую скобку
                 }
                 else if (dictValues.Contains(s))    // 2. ЕСЛИ текущий символ относится к значениям (закрывающим скобкам)
                 {                                                                                               // ТО
-                    if (stackSkobky.Count == 0) bResult = false;                                                // на случай если есть закрывающие, а открывающих в стек не клали
+                    if (stackSkobky.Count == 0) bResult = false;                                                // зафиксировать факт того, что есть закрывающие, а открывающих в стеке нет
                     bPeek = stackSkobky.TryPeek(out peek);                                                      // Получилось ли получить значение открывающей скобки на стеке? Если нет, занчит - else
                     bKeyValue = dictSkobky.TryGetValue(peek, out stackPeekDict);                                // Получилось ли найти для неё значение закрывающей скобки из словаря? Если нет, занчит - else
                     if ((s == stackPeekDict) && bPeek && bKeyValue) bPop = stackSkobky.TryPop(out stackPop);    // Если всё получилось и текущая закрывающая скобка совпадает со значением из словаря. Если нет, занчит - else
@@ -59,11 +59,9 @@ namespace Homework08
             }
 
             // Вывод
-            if (bResult && stackSkobky.Count == 0)  // ЕСЛИ значения были в стеке, но теперь их нет, значит всё ок
-            {
+            if (bResult && stackSkobky.Count==0)    // ЕСЛИ значений в стеке не осталось и нет лишних закрывающих скобок, то всё ок
                 WriteWithColor("Порядок и количество скобок верные.", ConsoleColor.Green);
-            }
-            else
+            else                                    // ИНАЧЕ, либо есть закрывающие, но нет открывающих (bResult=false), либо наоборот (stackSkobky.Count>0), либо и то и другое
                 WriteWithColor("В порядке или количестве скобок есть ошибка.", ConsoleColor.Red);
         }
 
