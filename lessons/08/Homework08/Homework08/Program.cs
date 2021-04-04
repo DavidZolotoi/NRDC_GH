@@ -50,6 +50,7 @@ namespace Homework08
                 }
                 else if (dictValues.Contains(s))    // 2. ЕСЛИ текущий символ относится к значениям (закрывающим скобкам)
                 {                                                                                               // ТО
+                    if (stackSkobky.Count == 0) bResult = false;                                                // на случай если есть закрывающие, а открывающих в стек не клали
                     bPeek = stackSkobky.TryPeek(out peek);                                                      // Получилось ли получить значение открывающей скобки на стеке? Если нет, занчит - else
                     bKeyValue = dictSkobky.TryGetValue(peek, out stackPeekDict);                                // Получилось ли найти для неё значение закрывающей скобки из словаря? Если нет, занчит - else
                     if ((s == stackPeekDict) && bPeek && bKeyValue) bPop = stackSkobky.TryPop(out stackPop);    // Если всё получилось и текущая закрывающая скобка совпадает со значением из словаря. Если нет, занчит - else
@@ -59,12 +60,14 @@ namespace Homework08
 
             // Вывод
             if (bResult && stackSkobky.Count == 0)  // ЕСЛИ значения были в стеке, но теперь их нет, значит всё ок
+            {
                 WriteWithColor("Порядок и количество скобок верные.", ConsoleColor.Green);
+            }
             else
                 WriteWithColor("В порядке или количестве скобок есть ошибка.", ConsoleColor.Red);
         }
 
-        // Метод ввода строки со всеми проверками, преобразованиями и возврата строки, содержащей только скобки
+        // Метод для ввода строки со всеми проверками, получающий допустимые значения и возвращающий изменённую строку только из допустимых
         static string ReadString(string name, string keysValues)
         {
             string text;
