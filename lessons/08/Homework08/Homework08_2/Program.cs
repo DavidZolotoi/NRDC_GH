@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Homework08
+namespace Homework08_2
 {
     class Program
     {
@@ -16,8 +16,15 @@ namespace Homework08
                 ['<'] = '>'
             };
 
-            // Метод для ввода строки со всеми проверками, получающий допустимые значения и возвращающий изменённую строку только из допустимых
-            var textCR = ReadString("выражение для проверки, содержащее скобки: ", dictSkobky);
+            // Варианты для проверки
+            //var textCR = "()";              // True
+            //var textCR = "[]()";            // True
+            //var textCR = "[[]()]";          // True
+            //var textCR = "([([])])()[]";    // True
+            //var textCR = "(";               // False
+            //var textCR = "[][)";            // False
+            //var textCR = "[(])";            // False
+            var textCR = "(()[]]";          // False
 
             // все проверки строки textCR на корректность исходных данных уже сделаны выше.
             var stackSkobky = new Stack<char>();
@@ -47,36 +54,6 @@ namespace Homework08
                 WriteWithColor("В порядке или количестве скобок есть ошибка.", ConsoleColor.Red);
         }
 
-        // Метод для ввода строки со всеми проверками, получающий допустимые значения и возвращающий изменённую строку только из допустимых
-        static string ReadString(string name, Dictionary<char, char> dict)
-        {
-            string text;
-            for (; ; )
-            {
-                try
-                {
-                    Console.Write("\nСписок важных скобок: ");
-                    foreach (var item in dict.Keys) Console.Write(item);
-                    foreach (var item in dict.Values) Console.Write(item);
-                    Console.Write($"\nВведите {name}");
-                    text = Console.ReadLine();
-
-                    // проверка на пустоту
-                    if (string.IsNullOrWhiteSpace(text))
-                    {
-                        WriteWithColor("Вы не ввели ни одной скобки из перечисленных выше. Пожалуйста, попробуйте еще раз.", ConsoleColor.Red);
-                        continue;
-                    }
-
-                    return text;
-                }
-                catch (ArgumentOutOfRangeException exception)   //Console.ReadLine()
-                {
-                    WriteWithColor("Слишком большое количество символов\n" + exception.Message, ConsoleColor.Red);
-                }
-            }
-        }
-
         // Метод вывода сообщения в цвете
         static void WriteWithColor(string message, ConsoleColor color)
         {
@@ -88,25 +65,3 @@ namespace Homework08
 
     }
 }
-
-// Немного поигрался с Console.ReadKey();
-//ConsoleKeyInfo klav;
-//do
-//{
-//    klav = Console.ReadKey();
-//    if (klav.KeyChar == '(' || klav.KeyChar == '[' || klav.KeyChar == ')' || klav.KeyChar == ']')
-//    {
-//        textCR += klav.KeyChar;
-//        continue;
-//    }
-
-//    if (klav.Key != ConsoleKey.Enter)
-//    {
-//        Console.WriteLine(
-//            $"\n\'{klav.KeyChar}\' - Недопустимый символ." +
-//            "\nПродолжайте вводить один из следующих символов: \'(\', \')\', \'[\', \']\'. Затем нажмите клавишу ввода." +
-//            $"\nНа данный момент введено \'{textCR}\'"
-//            );
-//    }
-//}
-//while (klav.Key != ConsoleKey.Enter) ;
