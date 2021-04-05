@@ -47,28 +47,23 @@ namespace Homework08_2
         {
             // все проверки строки textCR на корректность исходных данных уже сделаны выше.
             var stackSkobky = new Stack<char>();
-            bool getPeek, getKeyValue, getPop, getStackStatus = false;
-            char peek, stackPeekDict, stackPop;
+            bool getPop;
+            char stackPopDict, stackPop;
             foreach (var s in textCR)
             {
-                if (dictSkobky.ContainsKey(s))           // 1. ЕСЛИ текущий символ относится к ключам (открывающим скобкам)
-                {                                                                                                   // ТО
-                    stackSkobky.Push(s);                                                                            // То положить на стек открывающую скобку, ждущую закрытия
-                    getStackStatus = true;                                                                          // И зафиксировать факт того, что в стек положили открывающую скобку
-                }
-                else if (dictSkobky.ContainsValue(s))    // 2. ЕСЛИ текущий символ относится к значениям (закрывающим скобкам)
-                {                                                                                                   // ТО
-                    if (stackSkobky.Count == 0) getStackStatus = false;                                             // зафиксировать факт того, что есть закрывающие, а открывающих в стеке нет
-                    getPeek = stackSkobky.TryPeek(out peek);                                                        // Получилось ли получить значение открывающей скобки на стеке? Если нет, занчит - else
-                    getKeyValue = dictSkobky.TryGetValue(peek, out stackPeekDict);                                  // Получилось ли найти для неё значение закрывающей скобки из словаря? Если нет, занчит - else
-                    if ((s == stackPeekDict) && getPeek && getKeyValue) getPop = stackSkobky.TryPop(out stackPop);  // Если всё получилось и текущая закрывающая скобка совпадает со значением из словаря. Если нет, занчит - else
-                    //Console.WriteLine($"тек.символ {s}, на стеке {peek}, значение из словаря {stackPeekDict}");
+                if (dictSkobky.ContainsKey(s))                                              // 1. ЕСЛИ текущий символ относится к ключам (открывающим скобкам)
+                    stackSkobky.Push(s);                                                                // ТО положить на стек открывающую скобку, ждущую закрытия
+                else if (dictSkobky.ContainsValue(s))                                       // 2. ЕСЛИ текущий символ относится к значениям (закрывающим скобкам)
+                {                                                                                       // ТО
+                    getPop = stackSkobky.TryPop(out stackPop);                                          // скидываем со стека лежащую сверху открывающую скобку
+                    if (!(dictSkobky.TryGetValue(stackPop, out stackPopDict) && s == stackPopDict))     // находим для нее закрывающую из словаря и
+                        stackSkobky.Push(stackPop);                                                     // если она не совпадает с текущим закрывающей скобкой, то вернуть в стек значение
                 }
             }
 
             // ЕСЛИ значений в стеке не осталось и нет лишних закрывающих скобок, то всё ок
-            // ИНАЧЕ, либо есть закрывающие, но нет открывающих (bResult=false), либо наоборот (stackSkobky.Count>0), либо и то и другое
-            return getStackStatus && stackSkobky.Count == 0;
+            // ИНАЧЕ, либо есть закрывающие, но нет открывающих, либо наоборот, либо и то и другое
+            return stackSkobky.Count == 0;
         }
 
         // Метод вывода сообщения в цвете
