@@ -55,9 +55,9 @@ namespace Homework08_2
                     stackSkobky.Push(s);                                                                // ТО положить на стек открывающую скобку, ждущую закрытия
                 else if (dictSkobky.ContainsValue(s))                                       // 2. ЕСЛИ текущий символ относится к значениям (закрывающим скобкам)
                 {                                                                                       // ТО
-                    getPop = stackSkobky.TryPop(out stackPop);                                          // скидываем со стека лежащую сверху открывающую скобку
-                    if (!(dictSkobky.TryGetValue(stackPop, out stackPopDict) && s == stackPopDict))     // находим для нее закрывающую из словаря и
-                        stackSkobky.Push(stackPop);                                                     // если она не совпадает с текущим закрывающей скобкой, то вернуть в стек значение
+                    getPop = stackSkobky.TryPop(out stackPop);                                          // скидываем со стека лежащую сверху открывающую скобку (ключ для словаря)
+                    if (!(dictSkobky.TryGetValue(stackPop, out stackPopDict) && s == stackPopDict))     // находим для нее закрывающую скобку из словаря (значение из словаря)
+                        return false;                                                     // если они не совпадают, значит выражение неверно
                 }
             }
 
