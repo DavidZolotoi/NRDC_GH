@@ -15,7 +15,8 @@ namespace Classwork11
                 Kind = "Dog2"
             };
             p2.WriteInfo(true);
-            Console.ReadKey();
+
+            Console.ReadKey();  // ожидание нажатия
         }
     }
 }
