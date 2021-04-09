@@ -24,7 +24,8 @@ namespace Homework11
             {
                 Console.WriteLine(people[i].Info);
             }
-            
+
+            Console.ReadKey();
         }
 
         // Метод для ввода текста с проверкой на пустоту с обработкой искл. и возвратом текста
