@@ -6,19 +6,24 @@ namespace Homework11
     {
         // Свойства
         public DateTimeOffset AlarmDate { get; set; }   // ДАТА БУДИЛЬНИКА
-        public string AlarmMessage { get; set; }        // Сообщение будтльника
-        public TimeSpan TimeToAlarm;    // => текущее время минус AlarmDate
-        public bool IsOutdated;    //=> true, если TimeToAlarm больше либо равно 0
+        public string AlarmMessage { get; set; }        // Сообщение будильника
+        public TimeSpan TimeToAlarm => DateTimeOffset.UtcNow - AlarmDate;           // разница от настоящего времени
+        public bool IsOutdated => (TimeToAlarm.TotalSeconds >= 0) ? true : false;   // прошел?
 
         // Методы
-        public ReminderItem()       // конструктор
+        public ReminderItem(int year, int month, int day, int hour, int minute, int second, TimeSpan offset, string message)        // конструктор
         {
-            // значение AlarmDate
-            AlarmDate = new DateTimeOffset(2021, 04, 13, 15, 30, 00, TimeToAlarm);      //?
-            // AlarmMessage
-            AlarmMessage = "Пора на работу";
+            AlarmDate = new DateTimeOffset(year, month, day, hour, minute, second, offset);                         // запись даты будильника
+            AlarmMessage = message;                                                                                 // запись сообщения будильника
         }
-        public static void WriteProperties() { }    //выводить на экран все
+
+        public void WriteProperties()    //выводить на экран все
+        {
+            Console.WriteLine
+                (
+                $"AlarmDate: {AlarmDate},\nAlarmMessage: {AlarmMessage},\nTimeToAlarm: {TimeToAlarm},\nIsOutdated: {IsOutdated}"
+                );
+        }
     }
 
 
@@ -26,7 +31,17 @@ namespace Homework11
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+
+            ReminderItem ri1 = new ReminderItem(2021, 4, 13,
+                                                6, 00, 00,
+                                                TimeSpan.FromHours(+3),
+                                                "Пора просыпаться");
+            ReminderItem ri2 = new ReminderItem(2021, 4, 15,
+                                                6, 00, 00,
+                                                TimeSpan.FromHours(+3),
+                                                "Пора просыпаться");
+            ri1.WriteProperties();
+            ri2.WriteProperties();
         }
     }
 }
