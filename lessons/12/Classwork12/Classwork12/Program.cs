@@ -26,7 +26,7 @@ namespace Classwork12
         public string PersonName { get; set; }
         public override string Description
             => $"{base.Description}\n Country: {Country}\n PersonName: {PersonName}";
-        public Passport(string title, string number, DateTimeOffset issueDate, string country, string personName):
+        public Passport(string title, string number, DateTimeOffset issueDate, string country, string personName) :
             base(title, number, issueDate)
         {
             Country = country;
@@ -46,7 +46,7 @@ namespace Classwork12
 
             foreach (var person in baseDocuments)
             {
-                if (person is Passport passport) passport.IssueDate=DateTimeOffset.Now; 
+                if (person is Passport passport) passport.IssueDate = DateTimeOffset.Now;
                 person.WriteToConsole();
             }
         }
