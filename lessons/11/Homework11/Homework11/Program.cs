@@ -8,21 +8,102 @@ namespace Homework11
         public DateTimeOffset AlarmDate { get; set; }   // ДАТА БУДИЛЬНИКА
         public string AlarmMessage { get; set; }        // Сообщение будильника
         public TimeSpan TimeToAlarm => DateTimeOffset.UtcNow - AlarmDate;           // разница от настоящего времени
-        public bool IsOutdated => (TimeToAlarm.TotalSeconds >= 0) ? true : false;   // прошел?
+        public bool IsOutdated => (TimeToAlarm.TotalSeconds >= 0);                  // прошел?
 
         // Методы
-        public ReminderItem(int year, int month, int day, int hour, int minute, int second, TimeSpan offset, string message)        // конструктор
+        public ReminderItem()
         {
-            AlarmDate = new DateTimeOffset(year, month, day, hour, minute, second, offset);                         // запись даты будильника
-            AlarmMessage = message;                                                                                 // запись сообщения будильника
+            try
+            {
+                AlarmDate = new DateTimeOffset           // запись даты будильника
+                    (
+                    ReadInt("год"),
+                    ReadInt("месяц"),
+                    ReadInt("день"),
+                    ReadInt("час"),
+                    ReadInt("минуты"),
+                    ReadInt("секунды"),
+                    TimeSpan.FromHours(+3)
+                    );
+            }
+            catch (ArgumentException exception)
+            {
+                Console.WriteLine("Не удаётся распознать дату. \n" + exception.Message);
+                Environment.Exit(0);
+            }
+
+            AlarmMessage = ReadString("наименование");          // запись сообщения будильника
         }
 
-        public void WriteProperties()    //выводить на экран все
+        public void WriteProperties()    // метод вывода на экран все
         {
             Console.WriteLine
                 (
-                $"AlarmDate: {AlarmDate},\nAlarmMessage: {AlarmMessage},\nTimeToAlarm: {TimeToAlarm},\nIsOutdated: {IsOutdated}"
+                $"AlarmDate: {AlarmDate},\n" +
+                $"AlarmMessage: {AlarmMessage},\n" +
+                $"TimeToAlarm: {TimeToAlarm},\n" +
+                $"IsOutdated: {IsOutdated}"
                 );
+        }
+
+        // Метод для ввода строки со всеми проверками
+        public string ReadString(string name)
+        {
+            string text;
+            for (; ; )
+            {
+                try
+                {
+                    Console.Write($"Введите {name}: ");
+                    text = Console.ReadLine();
+
+                    // проверка на пустоту
+                    if (string.IsNullOrWhiteSpace(text))
+                    {
+                        Console.WriteLine("Вы не ввели пустой текст. Пожалуйста, попробуйте еще раз.");
+                        continue;
+                    }
+
+                    return text;
+                }
+                catch (ArgumentOutOfRangeException exception)   //Console.ReadLine()
+                {
+                    Console.WriteLine("Слишком большое количество символов\n" + exception.Message);
+                }
+            }
+        }
+
+        // Метод для ввода значения int с проверкой значений
+        public int ReadInt(string name)
+        {
+            for (; ; )
+            {
+                try
+                {
+                    Console.Write($"Введите {name}: ");
+                    int intValue = int.Parse(Console.ReadLine());
+
+                    return intValue;
+                }
+                catch (ArgumentOutOfRangeException exception)   //Console.ReadLine()
+                {
+                    Console.WriteLine("Слишком большое количество символов\n" + exception.Message);
+                }
+                catch (Exception exception) when (exception is ArgumentNullException || exception is FormatException)     //int.Parse()
+                {
+                    Console.WriteLine("Не удаётся распознать число. Пожалуйста, введите число корректно.\n" + exception.Message);
+                }
+                catch (OverflowException exception)             //int.Parse()
+                {
+                    Console.WriteLine("Введенное значение выходит за пределы допустимых.\n" +
+                                   //"Пожалуйста введите значение в пределах от " + int.MinValue + " до " + int.MaxValue + ".\n" +
+                                   exception.Message);
+                }
+                catch (ArgumentException exception)              //int.Parse()
+                {
+                    Console.WriteLine("Что-то пошло не так, возможно не удаётся распознать способ округления.\n" + exception.Message);
+                }
+            }
         }
     }
 
@@ -31,16 +112,10 @@ namespace Homework11
     {
         static void Main(string[] args)
         {
-
-            ReminderItem ri1 = new ReminderItem(2021, 4, 13,
-                                                6, 00, 00,
-                                                TimeSpan.FromHours(+3),
-                                                "Пора просыпаться");
-            ReminderItem ri2 = new ReminderItem(2021, 4, 15,
-                                                6, 00, 00,
-                                                TimeSpan.FromHours(+3),
-                                                "Пора просыпаться");
+           ReminderItem ri1 = new ReminderItem();
             ri1.WriteProperties();
+
+            ReminderItem ri2 = new ReminderItem();
             ri2.WriteProperties();
         }
     }
