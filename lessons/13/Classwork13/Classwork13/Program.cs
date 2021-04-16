@@ -9,6 +9,7 @@ namespace Classwork13
         public FlyMachine(int maxHeight, byte bladesCount)
         {
             MaxHeight = maxHeight;
+            CurrentHeight = 0;
         }
         protected void TakeUpper(int delta)
         {
@@ -29,7 +30,7 @@ namespace Classwork13
         public byte BladesCount { get; private set; }
         public Helicopter(int maxHeight, byte bladesCount):base(maxHeight, bladesCount)
         {
-            // НЕДОДЕЛАЛ
+            BladesCount = bladesCount;
         }
     }
 
