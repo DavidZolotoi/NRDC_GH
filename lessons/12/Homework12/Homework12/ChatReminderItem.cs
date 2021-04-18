@@ -6,10 +6,13 @@ namespace Homework12
     {
         public string ChatName { get; set; }
         public string AccountName { get; set; }
+        public override string InfoTotal =>                 // инфа о будильнике
+            base.InfoTotal +
+            $"ChatName:\t{ChatName},\n" +
+            $"AccountName:\t{AccountName}.\n";
 
-        public string InfoChatReminderItem { get; private set; }                           // другая инфа о будильнике
 
-        public ChatReminderItem(string chatName, string accountName, DateTimeOffset alarmDate, string alarmMessage = "Будильник") : base(alarmDate, alarmMessage)
+        public ChatReminderItem(string chatName, string accountName, DateTimeOffset alarmDate, string alarmMessage) : base(alarmDate, alarmMessage)
         {
             if (string.IsNullOrWhiteSpace(chatName))
             {
@@ -23,14 +26,6 @@ namespace Homework12
 
             ChatName = chatName;
             AccountName = accountName;
-            InfoChatReminderItem =
-                $"ChatName:\t{ChatName},\n" +
-                $"AccountName:\t{AccountName}.";
-        }
-
-        public override void WriteProperties()    // метод вывода на экран всего
-        {
-            Console.WriteLine(base.InfoTotal + InfoChatReminderItem);
         }
     }
 }
