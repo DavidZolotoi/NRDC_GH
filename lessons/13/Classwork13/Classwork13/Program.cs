@@ -6,10 +6,14 @@ namespace Classwork13
     {
         public int MaxHeight { get; private set; }
         public int CurrentHeight { get; private set; }
+        public string InfoTotal { get; private set; }
         public FlyMachine(int maxHeight)
         {
             MaxHeight = maxHeight;
             CurrentHeight = 0;
+            InfoTotal =
+                $"MaxHeight:\t{MaxHeight}\n" +
+                $"CurrentHeight:\t{CurrentHeight}\n";
         }
         public void TakeUpper(int delta)
         {
@@ -23,42 +27,42 @@ namespace Classwork13
             if (CurrentHeight - delta < 0) throw new InvalidOperationException("Crash");
             CurrentHeight -= delta;
         }
-        public virtual void WriteInfo(string info)
+        public virtual void WriteInfo()
         {
-            string infoTotal =
-                $"MaxHeight:\t{MaxHeight}\n" +
-                $"CurrentHeight:\t{CurrentHeight}\n";
-            Console.WriteLine(infoTotal + info);
+            Console.WriteLine(InfoTotal);
         }
     }
 
     class Helicopter:FlyMachine
     {
         public byte BladesCount { get; private set; }
+        public string InfoHelicopter { get; private set; }
         public Helicopter(int maxHeight, byte bladesCount):base(maxHeight)
         {
             BladesCount = bladesCount;
             Console.WriteLine("It's a helicopter, welcome aboard!");
+            InfoHelicopter = $"BladesCount:\t{BladesCount}\n";
         }
-        public void infoFly()
+        public override void WriteInfo()
         {
-            string info = $"BladesCount:\t{BladesCount}\n";
-            base.WriteInfo(info);
+            Console.WriteLine(base.InfoTotal + InfoHelicopter);
         }
     }
 
     class Plane : FlyMachine
     {
         public byte EnginesCount { get; private set; }
+        public string InfoPlane { get; private set; }
+
         public Plane(int maxHeight, byte enginesCount) : base(maxHeight)
         {
             EnginesCount = enginesCount;
             Console.WriteLine("It's a plane, welcome aboard!");
+            InfoPlane = $"EnginesCount:\t{EnginesCount}\n";
         }
-        public void infoFly()
+        public override void WriteInfo()
         {
-            string info = $"EnginesCount:\t{EnginesCount}\n";
-            base.WriteInfo(info);
+            Console.WriteLine(base.InfoTotal + InfoPlane);
         }
     }
 
@@ -70,13 +74,13 @@ namespace Classwork13
             var plane = new Plane(100, 4);
             plane.TakeUpper(120);
             plane.TakeLower(100);
-            plane.infoFly();
+            plane.WriteInfo();
             //plane.WriteAllProperties2();
 
             var helicopter = new Helicopter(80, 3);
             helicopter.TakeUpper(120);
             helicopter.TakeLower(60);
-            helicopter.infoFly();
+            helicopter.WriteInfo();
             //helicopter.WriteAllProperties2();
 
         }
