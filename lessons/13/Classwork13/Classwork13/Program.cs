@@ -6,14 +6,13 @@ namespace Classwork13
     {
         public int MaxHeight { get; private set; }
         public int CurrentHeight { get; private set; }
-        public string InfoTotal { get; private set; }
+        public virtual string InfoTotal =>
+                $"MaxHeight:\t{MaxHeight}\n" +
+                $"CurrentHeight:\t{CurrentHeight}\n";
         public FlyMachine(int maxHeight)
         {
             MaxHeight = maxHeight;
             CurrentHeight = 0;
-            InfoTotal =
-                $"MaxHeight:\t{MaxHeight}\n" +
-                $"CurrentHeight:\t{CurrentHeight}\n";
         }
         public void TakeUpper(int delta)
         {
@@ -37,11 +36,13 @@ namespace Classwork13
     {
         public byte BladesCount { get; private set; }
         public string InfoHelicopter { get; private set; }
+        public override string InfoTotal =>
+                                base.InfoTotal +
+                                $"BladesCount:\t{BladesCount}\n";
         public Helicopter(int maxHeight, byte bladesCount):base(maxHeight)
         {
             BladesCount = bladesCount;
             Console.WriteLine("It's a helicopter, welcome aboard!");
-            InfoHelicopter = $"BladesCount:\t{BladesCount}\n";
         }
         public override void WriteInfo()
         {
@@ -53,12 +54,14 @@ namespace Classwork13
     {
         public byte EnginesCount { get; private set; }
         public string InfoPlane { get; private set; }
+        public override string InfoTotal =>
+                        base.InfoTotal +
+                        $"EnginesCount:\t{EnginesCount}\n";
 
         public Plane(int maxHeight, byte enginesCount) : base(maxHeight)
         {
             EnginesCount = enginesCount;
             Console.WriteLine("It's a plane, welcome aboard!");
-            InfoPlane = $"EnginesCount:\t{EnginesCount}\n";
         }
         public override void WriteInfo()
         {
