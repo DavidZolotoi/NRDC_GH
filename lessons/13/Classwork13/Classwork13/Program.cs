@@ -26,16 +26,19 @@ namespace Classwork13
             if (CurrentHeight - delta < 0) throw new InvalidOperationException("Crash");
             CurrentHeight -= delta;
         }
-        public virtual void WriteInfo()
+
+        public abstract void WriteInfo();
+
+        public virtual void WriteInfo2()
         {
             Console.WriteLine(InfoTotal);
         }
+
     }
 
     class Helicopter:FlyMachine
     {
         public byte BladesCount { get; private set; }
-        public string InfoHelicopter { get; private set; }
         public override string InfoTotal =>
                                 base.InfoTotal +
                                 $"BladesCount:\t{BladesCount}\n";
@@ -46,14 +49,19 @@ namespace Classwork13
         }
         public override void WriteInfo()
         {
-            Console.WriteLine(base.InfoTotal + InfoHelicopter);
+            Console.WriteLine("О вертолете:\n" + InfoTotal);
         }
+        public override void WriteInfo2()
+        {
+            Console.WriteLine("О вертолете через другой метод:");
+            base.WriteInfo2();
+        }
+        
     }
 
     class Plane : FlyMachine
     {
         public byte EnginesCount { get; private set; }
-        public string InfoPlane { get; private set; }
         public override string InfoTotal =>
                         base.InfoTotal +
                         $"EnginesCount:\t{EnginesCount}\n";
@@ -65,8 +73,14 @@ namespace Classwork13
         }
         public override void WriteInfo()
         {
-            Console.WriteLine(base.InfoTotal + InfoPlane);
+            Console.WriteLine("О самолете:\n" + InfoTotal);
         }
+        public override void WriteInfo2()
+        {
+            Console.WriteLine("О самолете через другой метод:");
+            base.WriteInfo2();
+        }
+
     }
 
     class Program
@@ -78,13 +92,13 @@ namespace Classwork13
             plane.TakeUpper(120);
             plane.TakeLower(100);
             plane.WriteInfo();
-            //plane.WriteAllProperties2();
+            plane.WriteInfo2();
 
             var helicopter = new Helicopter(80, 3);
             helicopter.TakeUpper(120);
             helicopter.TakeLower(60);
             helicopter.WriteInfo();
-            //helicopter.WriteAllProperties2();
+            helicopter.WriteInfo2();
 
         }
     }
