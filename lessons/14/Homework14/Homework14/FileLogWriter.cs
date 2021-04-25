@@ -11,12 +11,12 @@ namespace Homework14
             if (!File.Exists(@"logs\logs.txt")) { var fileLogs = File.Create(@"logs\logs.txt"); fileLogs.Close(); }
         }
 
-        public override void Writer(string TextLog)
+        public override void Writer(string textLog)
         {
-            if (string.IsNullOrWhiteSpace(TextLog))
+            if (string.IsNullOrWhiteSpace(textLog))
                 throw new ArgumentException("Некорректное сообщение для лога.");
             else
-                File.AppendAllText(@"logs\logs.txt", TextLog);
+                File.AppendAllText(@"logs\logs.txt", textLog);
         }   // проверка лишняя (задублированная), но сделана для самомтоятельности метода, с расчетом на будущие изменения кода
     }
 }

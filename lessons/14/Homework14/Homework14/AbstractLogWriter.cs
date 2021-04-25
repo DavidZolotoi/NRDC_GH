@@ -4,7 +4,7 @@ namespace Homework14
 {
     abstract class AbstractLogWriter : ILogWriter
     {
-        public virtual string TextLog { get; set; }
+        public string TextLog { get; set; }
         public string DateNow { get; set; }
 
         public AbstractLogWriter()
