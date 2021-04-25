@@ -4,12 +4,11 @@ namespace Homework14
 {
     abstract class AbstractLogWriter : ILogWriter
     {
-        public string TextLog { get; set; }
         public string DateNow { get; set; }
 
         public AbstractLogWriter()
         {
-            DateNow = $"{DateTimeOffset.UtcNow:O}";
+            DateNow = $"{DateTimeOffset.UtcNow:O}";     // фиксация даты и времени создания лога
         }
 
         public virtual void LogError(string message)
@@ -32,8 +31,7 @@ namespace Homework14
             if (string.IsNullOrWhiteSpace(message))
                 throw new ArgumentException("Некорректное сообщение для лога.");
             else
-                TextLog = $"{DateNow}\t{typeLog}\t{ message}\n";
-            Writer(TextLog);
+                Writer($"{DateNow}\t{typeLog}\t{ message}\n");
         }
 
         abstract public void Writer(string textLog);
