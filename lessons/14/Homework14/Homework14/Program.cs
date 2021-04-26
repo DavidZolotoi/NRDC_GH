@@ -8,11 +8,11 @@ namespace Homework14
         static void Main(string[] args)
         {
             // Коллекция объектов классов, реализующих интерфейс ILogWriter
-            var logList = new List<AbstractLogWriter>()
+            var logList = new List<ILogWriter>()
             {
-                new FileLogWriter(),
-                new FileLogWriter(),
-                new FileLogWriter(),
+                new FileLogWriter("logs"),
+                new FileLogWriter("logs"),
+                new FileLogWriter("logs"),
                 new ConsoleLogWriter(),
                 new ConsoleLogWriter(),
                 new ConsoleLogWriter(),

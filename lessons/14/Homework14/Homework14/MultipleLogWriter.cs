@@ -3,24 +3,44 @@ using System.Collections.Generic;
 
 namespace Homework14
 {
-    class MultipleLogWriter : AbstractLogWriter
+    class MultipleLogWriter : ILogWriter
     {
-        public List<AbstractLogWriter> LogList { get; set; }
+        List<ILogWriter> LogList { get; set; }
 
-        public MultipleLogWriter(List<AbstractLogWriter> logList)
+        public MultipleLogWriter(List<ILogWriter> logList)
         {
-            if (logList.Count==0)
+            if (logList==null)
                 throw new ArgumentException("Некорректная коллекция логов.");
-            else
-                LogList = logList;
+            LogList = logList;
         }
         
-        public override void Writer(string textLog)
+        public void LogInfo(string message)
         {
-            if (string.IsNullOrWhiteSpace(textLog))
+            LogWriter("Info", message);
+        }
+
+        public void LogWarning(string message)
+        {
+            LogWriter("Warning", message);
+        }
+
+        public void LogError(string message)
+        {
+            LogWriter("Error", message);
+        }
+
+        public void LogWriter(string typeLog, string message)
+        {
+            if (string.IsNullOrWhiteSpace(message))
                 throw new ArgumentException("Некорректное сообщение для лога.");
-            else
-                foreach (var item in LogList) item.Writer(textLog);
-        }   // проверка лишняя (задублированная), но сделана для самомтоятельности метода, с расчетом на будущие изменения кода
+
+            string textLog = $"{DateTimeOffset.UtcNow:O}\t{typeLog}\t{ message}\n";
+
+            foreach (var item in LogList)
+                     if (item.GetType() == typeof(FileLogWriter))    ((FileLogWriter)item).Writer(textLog);
+                else if (item.GetType() == typeof(ConsoleLogWriter)) ((ConsoleLogWriter)item).Writer(textLog);
+                else throw new ArgumentException("Неизвестный тип записи лога");
+        }
+
     }
 }

@@ -8,8 +8,7 @@ namespace Homework14
         {
             if (string.IsNullOrWhiteSpace(textLog))
                 throw new ArgumentException("Некорректное сообщение для лога.");
-            else
-                Console.Write(textLog);
+            Console.Write(textLog);
         }   // проверка лишняя (задублированная), но сделана для самомтоятельности метода, с расчетом на будущие изменения кода
     }
 }
