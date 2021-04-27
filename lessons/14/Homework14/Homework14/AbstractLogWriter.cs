@@ -26,6 +26,10 @@ namespace Homework14
             Writer($"{DateTimeOffset.UtcNow:O}\t{typeLog}\t{ message}\n");
         }
 
-        protected virtual void Writer(string textLog) { }
+        protected virtual void Writer(string textLog)
+        {
+            if (string.IsNullOrWhiteSpace(textLog))
+                throw new ArgumentException("Некорректное сообщение для лога.");
+        }
     }
 }
