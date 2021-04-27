@@ -4,7 +4,7 @@ namespace Homework14
 {
     class ConsoleLogWriter : AbstractLogWriter
     {
-        public override void Writer(string textLog)
+        protected override void Writer(string textLog)
         {
             if (string.IsNullOrWhiteSpace(textLog))
                 throw new ArgumentException("Некорректное сообщение для лога.");

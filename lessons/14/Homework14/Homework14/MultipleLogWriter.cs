@@ -16,31 +16,23 @@ namespace Homework14
         
         public void LogInfo(string message)
         {
-            LogWriter("Info", message);
-        }
+            if (string.IsNullOrWhiteSpace(message))
+                throw new ArgumentException("Некорректное сообщение для лога.");
+            foreach (var item in LogList) item.LogInfo(message);
+        }   // проверка лишняя (задублированная), но сделана для самомтоятельности метода, с расчетом на будущие изменения кода
 
         public void LogWarning(string message)
         {
-            LogWriter("Warning", message);
-        }
+            if (string.IsNullOrWhiteSpace(message))
+                throw new ArgumentException("Некорректное сообщение для лога.");
+            foreach (var item in LogList) item.LogWarning(message);
+        }   // проверка лишняя (задублированная), но сделана для самомтоятельности метода, с расчетом на будущие изменения кода
 
         public void LogError(string message)
         {
-            LogWriter("Error", message);
-        }
-
-        public void LogWriter(string typeLog, string message)
-        {
             if (string.IsNullOrWhiteSpace(message))
                 throw new ArgumentException("Некорректное сообщение для лога.");
-
-            string textLog = $"{DateTimeOffset.UtcNow:O}\t{typeLog}\t{ message}\n";
-
-            foreach (var item in LogList)
-                     if (item.GetType() == typeof(FileLogWriter))    ((FileLogWriter)item).Writer(textLog);
-                else if (item.GetType() == typeof(ConsoleLogWriter)) ((ConsoleLogWriter)item).Writer(textLog);
-                else throw new ArgumentException("Неизвестный тип записи лога");
-        }
-
+            foreach (var item in LogList) item.LogError(message);
+        }   // проверка лишняя (задублированная), но сделана для самомтоятельности метода, с расчетом на будущие изменения кода
     }
 }

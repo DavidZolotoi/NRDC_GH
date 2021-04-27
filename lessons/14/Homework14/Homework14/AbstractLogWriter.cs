@@ -26,6 +26,6 @@ namespace Homework14
             Writer($"{DateTimeOffset.UtcNow:O}\t{typeLog}\t{ message}\n");
         }
 
-        abstract public void Writer(string textLog);
+        protected virtual void Writer(string textLog) { }
     }
 }
