@@ -110,14 +110,12 @@ namespace Homework15
     public class LogWriterFactory
     {
         private static LogWriterFactory instance;
-        //public static LogWriterFactory Instance; // => instance ?? (instance = new LogWriterFactory()); // другой способ: Instance { get; } = new LogWriterFactory();
-        private LogWriterFactory()
-        {}
+        public static LogWriterFactory Instance; // => instance ??= new LogWriterFactory();     // другой способ: Instance { get; } = new LogWriterFactory();
+        private LogWriterFactory(){}
 
         public ILogWriter GetLogWriter<T>(object parameters) where T : ILogWriter               // T: ConsoleLogWriter, FileLogWriter, MultipleLogWriter
-        {   // универсальный метод, возвращающий объект типа ILogWriter
-            // реализовать Синглтон => создать объект и положить в статическое поле
-            return instance ?? (instance = new T());
+        {
+            Instance = instance ??= new T();
         }
     }
 
@@ -125,27 +123,27 @@ namespace Homework15
     {
         static void Main(string[] args)
         {
-            // I. программа из предыдущего задания
             // Коллекция объектов классов, реализующих интерфейс ILogWriter
             var logList = new List<ILogWriter>()
             {
                 new FileLogWriter("logs"),
                 new ConsoleLogWriter(),
             };
-            logList[0].LogError("FileLogWriter-Error");         // эта запись пойдёт в файл
-            logList[1].LogWarning("ConsoleLogWriter-Warning");  // эта запись пойдёт на консоль
+
+            logList[0].LogError("FileLogWriter-Error");         // эти три записи пойдут в файл
+            logList[1].LogWarning("ConsoleLogWriter-Warning");  // эти три записи пойдут на консоль
+
             Console.WriteLine();
+
             var logMultiple = new MultipleLogWriter(logList);
             // методы, реализации которых зависят от класса элемента коллекции // пробегаются по всем элементам коллекции
-            logMultiple.LogError("MultipleLogWriter-Error");        // 1 запсисm в файл + 1 записm на косноль = 2 заданных элементов коллекции
-            logMultiple.LogInfo("MultipleLogWriter-Info");          // 1 запсисm в файл + 1 записm на косноль = 2 заданных элементов коллекции
-            logMultiple.LogWarning("MultipleLogWriter-Warning");    // 1 запсисm в файл + 1 записm на косноль = 2 заданных элементов коллекции
+            logMultiple.LogError("MultipleLogWriter-Error");        // 1 запсисm в файлm + 1 записm на косноль = 2 заданных элементов коллекции
+            logMultiple.LogInfo("MultipleLogWriter-Info");          // 1 запсисm в файлm + 1 записm на косноль = 2 заданных элементов коллекции
+            logMultiple.LogWarning("MultipleLogWriter-Warning");    // 1 запсисm в файлm + 1 записm на косноль = 2 заданных элементов коллекции
                                                                     // итого 6 записей = 3 в файле + 3 на консоль
 
-            // II. программа этого задания
-            GetLogWriter<ConsoleLogWriter>(   );
-            GetLogWriter<FileLogWriter>("logs");
-            GetLogWriter<MultipleLogWriter>(logList);
+            GetLogWriter<ConsoleLogWriter>(LogWriterFactory.);
+
         }
     }
 }
