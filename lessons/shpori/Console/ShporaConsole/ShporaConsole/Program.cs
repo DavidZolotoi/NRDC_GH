@@ -4,6 +4,7 @@ using System.Threading;
 
 namespace ShporaConsole
 {
+    
     class Program
     {
         // Для № 09. Игры с преобразованиями и выводом Enum
