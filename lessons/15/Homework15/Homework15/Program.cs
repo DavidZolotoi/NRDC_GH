@@ -4,14 +4,14 @@ using System.IO;
 
 namespace Homework15
 {
-    interface ILogWriter
+    public interface ILogWriter
     {
         void LogInfo(string message);
         void LogWarning(string message);
         void LogError(string message);
     }
 
-    abstract class AbstractLogWriter : ILogWriter
+    public abstract class AbstractLogWriter : ILogWriter
     {
         public virtual void LogError(string message)
         {
@@ -42,7 +42,7 @@ namespace Homework15
         }
     }
 
-    class ConsoleLogWriter : AbstractLogWriter
+    public class ConsoleLogWriter : AbstractLogWriter
     {
         protected override void Writer(string textLog)
         {
@@ -52,7 +52,7 @@ namespace Homework15
         }   // проверка лишняя (задублированная), но сделана для самомтоятельности метода, с расчетом на будущие изменения кода
     }
 
-    class FileLogWriter : AbstractLogWriter
+    public class FileLogWriter : AbstractLogWriter
     {
         private string DirName { get; set; }
 
@@ -73,7 +73,7 @@ namespace Homework15
         }   // проверка лишняя (задублированная), но сделана для самомтоятельности метода, с расчетом на будущие изменения кода
     }
 
-    class MultipleLogWriter : ILogWriter
+    public class MultipleLogWriter : ILogWriter
     {
         List<ILogWriter> LogList { get; set; }
 
@@ -110,12 +110,12 @@ namespace Homework15
     public class LogWriterFactory
     {
         private static LogWriterFactory instance;
-        //public static LogWriterFactory Instance; // => instance ??= new LogWriterFactory();     // другой способ: Instance { get; } = new LogWriterFactory();
-        private LogWriterFactory(){}
+        public static LogWriterFactory Instance => instance  ??= new LogWriterFactory(new object());     // другой способ: Instance { get; } = new LogWriterFactory();
+        private LogWriterFactory(object parameters) {}
 
         public ILogWriter GetLogWriter<T>(object parameters) where T : ILogWriter               // T: ConsoleLogWriter, FileLogWriter, MultipleLogWriter
         {
-            return instance ?? (instance = new T());
+            return (ILogWriter)(instance ?? (instance = new LogWriterFactory(parameters)));
         }
     }
 
@@ -123,28 +123,14 @@ namespace Homework15
     {
         static void Main(string[] args)
         {
-            //--- I. ИЗ ПРЕДЫДУЩЕЙ ДОМАШКИ ---//
-            // Коллекция объектов классов, реализующих интерфейс ILogWriter
-            var logList = new List<ILogWriter>()
-            {
-                new FileLogWriter("logs"),
-                new ConsoleLogWriter(),
-            };
-            logList[0].LogError("FileLogWriter-Error");         // эта запись пойдёт в файл
-            logList[1].LogWarning("ConsoleLogWriter-Warning");  // эта запись пойдёт на консоль
-            Console.WriteLine();
-            var logMultiple = new MultipleLogWriter(logList);
-            // методы, реализации которых зависят от класса элемента коллекции // пробегаются по всем элементам коллекции
-            logMultiple.LogError("MultipleLogWriter-Error");        // 1 запсисm в файлm + 1 записm на косноль = 2 заданных элементов коллекции
-            logMultiple.LogInfo("MultipleLogWriter-Info");          // 1 запсисm в файлm + 1 записm на косноль = 2 заданных элементов коллекции
-            logMultiple.LogWarning("MultipleLogWriter-Warning");    // 1 запсисm в файлm + 1 записm на косноль = 2 заданных элементов коллекции
-                                                                    // итого 6 записей = 3 в файле + 3 на консоль
-            
-            //--- II. НОВАЯ ДОМАШКА ---//
-            GetLogWriter<ConsoleLogWriter>(   );
-            GetLogWriter<FileLogWriter>("logs");
-            GetLogWriter<MultipleLogWriter>(logList);
+            //--- НОВАЯ ДОМАШКА ---//
+            var logger1 = LogWriterFactory.Instance.GetLogWriter<ConsoleLogWriter>(null);                                           // объект ConsoleLogWriter
+            var logger2 = LogWriterFactory.Instance.GetLogWriter<FileLogWriter>("logs");                                            // объект FileLogWriter
+            var logger3 = LogWriterFactory.Instance.GetLogWriter<MultipleLogWriter>(new List<ILogWriter>() { logger2, logger2 });   // объект MultipleLogWriter
 
+            logger1.LogError("вывод Error на консоль");
+            logger2.LogInfo("вывод Info в файл");
+            logger3.LogWarning("вывод Warning и в консоль и в файл");
         }
     }
 }
