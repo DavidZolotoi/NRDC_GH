@@ -115,7 +115,7 @@ namespace Homework15
 
         public ILogWriter GetLogWriter<T>(object parameters) where T : ILogWriter               // T: ConsoleLogWriter, FileLogWriter, MultipleLogWriter
         {
-            return (ILogWriter)(instance ?? (instance = new LogWriterFactory(parameters)));
+            return (ILogWriter)(new T(parameters));         //(instance ?? (instance = new LogWriterFactory(parameters)));
         }
     }
 
