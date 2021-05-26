@@ -110,12 +110,27 @@ namespace Homework15
     public class LogWriterFactory
     {
         private static LogWriterFactory instance;
-        public static LogWriterFactory Instance => instance  ??= new LogWriterFactory(new object());     // другой способ: Instance { get; } = new LogWriterFactory();
-        private LogWriterFactory(object parameters) {}
+        public static LogWriterFactory Instance => instance  ??= new LogWriterFactory();     // другой способ: Instance { get; } = new LogWriterFactory();
+        private LogWriterFactory() {}
 
+        // метод для [синглтонского] объекта
         public ILogWriter GetLogWriter<T>(object parameters) where T : ILogWriter               // T: ConsoleLogWriter, FileLogWriter, MultipleLogWriter
         {
-            return (ILogWriter)(new T(parameters));         //(instance ?? (instance = new LogWriterFactory(parameters)));
+            ILogWriter logWriter = default;
+            if (typeof(T) == typeof(ConsoleLogWriter)) logWriter = (ILogWriter)(new ConsoleLogWriter());
+            if (typeof(T) == typeof(FileLogWriter)) logWriter = (ILogWriter)(new FileLogWriter(parameters.ToString()));
+            if (typeof(T) == typeof(MultipleLogWriter)) logWriter = (ILogWriter)(new MultipleLogWriter((List<ILogWriter>)parameters));
+            return logWriter;
+        }
+
+        // аналогичный статический метод
+        public static ILogWriter GetLogWriterStatic<T>(object parameters) where T : ILogWriter               // T: ConsoleLogWriter, FileLogWriter, MultipleLogWriter
+        {
+            ILogWriter logWriter = default;
+            if (typeof(T) == typeof(ConsoleLogWriter)) logWriter = (ILogWriter)(new ConsoleLogWriter());
+            if (typeof(T) == typeof(FileLogWriter)) logWriter = (ILogWriter)(new FileLogWriter(parameters.ToString()));
+            if (typeof(T) == typeof(MultipleLogWriter)) logWriter = (ILogWriter)(new MultipleLogWriter((List<ILogWriter>)parameters));
+            return logWriter;
         }
     }
 
@@ -123,14 +138,25 @@ namespace Homework15
     {
         static void Main(string[] args)
         {
-            //--- НОВАЯ ДОМАШКА ---//
+            //--- Работа метода внутри синглтонского объекта ---//
             var logger1 = LogWriterFactory.Instance.GetLogWriter<ConsoleLogWriter>(null);                                           // объект ConsoleLogWriter
             var logger2 = LogWriterFactory.Instance.GetLogWriter<FileLogWriter>("logs");                                            // объект FileLogWriter
-            var logger3 = LogWriterFactory.Instance.GetLogWriter<MultipleLogWriter>(new List<ILogWriter>() { logger2, logger2 });   // объект MultipleLogWriter
+            var logger3 = LogWriterFactory.Instance.GetLogWriter<MultipleLogWriter>(new List<ILogWriter>() { logger1, logger2 });   // объект MultipleLogWriter
 
             logger1.LogError("вывод Error на консоль");
             logger2.LogInfo("вывод Info в файл");
             logger3.LogWarning("вывод Warning и в консоль и в файл");
+
+            // Аналог со статическим методом
+            var logger4 = LogWriterFactory.GetLogWriterStatic<ConsoleLogWriter>(null);                                           // объект ConsoleLogWriter
+            var logger5 = LogWriterFactory.GetLogWriterStatic<FileLogWriter>("logs");                                            // объект FileLogWriter
+            var logger6 = LogWriterFactory.GetLogWriterStatic<MultipleLogWriter>(new List<ILogWriter>() { logger1, logger2 });   // объект MultipleLogWriter
+
+            logger4.LogError("вывод Error на консоль (стат.метод)");
+            logger5.LogInfo("вывод Info в файл (стат.метод)");
+            logger6.LogWarning("вывод Warning и в консоль и в файл (стат.метод)");
+
+
         }
     }
 }
