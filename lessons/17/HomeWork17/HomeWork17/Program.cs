@@ -22,7 +22,9 @@ namespace HomeWork17
                 Console.WriteLine($"i={i}; actualPersent = {actualPersent}; percentageToFireEvent*k = {percentageToFireEvent*k}");
                 if (actualPersent >= percentageToFireEvent*k)
                 {
-                    Performed?.Invoke(this, new InfoDownload(percentageToFireEvent));
+                    Performed?.Invoke(this, new InfoDownload(
+                                                (float)Math.Round(percentageToFireEvent*k, kolvoZnakov, MidpointRounding.AwayFromZero))
+                        );
                     k++;    // k-1 = количество событий Performed
                 }
                 if (i == data.Length - 1) Completed?.Invoke();        // вызов WritingCompleted
@@ -64,7 +66,7 @@ namespace HomeWork17
             writer.WritingCompleted = () => Console.WriteLine("Достигнут конец записи.");
             writer.Completed += writer.WritingCompleted;
 
-            writer.WriteBytes("log.txt", ArrayForFile, 0.1f);
+            writer.WriteBytes("log.txt", ArrayForFile, 0.22f);
         }
 
         // обработчик с нужной сигнатурой для EventHandler<InfoDownload> // !!!ОБЯЗАТЕЛЬНО УКАЗАТЬ СОБСТВЕННЫЙ ТИП АРГУМЕНТА InfoDownload!!!
