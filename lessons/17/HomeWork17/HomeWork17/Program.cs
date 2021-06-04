@@ -7,40 +7,46 @@ namespace HomeWork17
     {
         public void WriteBytes(string fileName, byte[] data, float percentageToFireEvent)
         {
-            // fileName - имя файла - создать, если не создать
-            // data - массив типа byte для записи
-            // percentageToFireEvent - это процентная величина для вызова периодического события о прогрессе (0 < percentageToFireEvent < 1)
-
             // количество знаков после запятой = на 1 больше кол-ва знаков у переменной percentageToFireEvent (для точности)
             var kolvoZnakov = (percentageToFireEvent - (int)percentageToFireEvent).ToString().Length - 2+1;     // -2, потому надо убрать из длины 0 и точку, +1 чтоб добавить точности
-            Console.WriteLine($"колво знаков {kolvoZnakov}");
+            Console.WriteLine($"кол-во знаков {kolvoZnakov}");
 
             if (!Directory.Exists("logs")) Directory.CreateDirectory("logs");
 
+            double actualPersent;                   // вынес за цикл, чтоб не создавать при каждой итерации
             for (int i=0, k=1; i<data.Length; i++)
             {
+                actualPersent = Math.Round((float)i / data.Length, kolvoZnakov, MidpointRounding.AwayFromZero);
                 File.AppendAllText($"logs\\{fileName}", data[i].ToString());
 
-                Console.WriteLine($"i={i}");
-                Console.WriteLine($"i/data.Length = {Math.Round((float)i / data.Length, kolvoZnakov, MidpointRounding.AwayFromZero)}; percentageToFireEvent*k = {percentageToFireEvent*k}");
-
-                if (Math.Round((float)i / data.Length, kolvoZnakov, MidpointRounding.AwayFromZero) >= percentageToFireEvent*k)
+                Console.WriteLine($"i={i}; actualPersent = {actualPersent}; percentageToFireEvent*k = {percentageToFireEvent*k}");
+                if (actualPersent >= percentageToFireEvent*k)
                 {
-                    Performed?.Invoke(percentageToFireEvent);   // вызов WritingPerformed
-                    k++;                                        // k-1 = количество событий Performed
+                    Performed?.Invoke(this, new InfoDownload(percentageToFireEvent));
+                    k++;    // k-1 = количество событий Performed
                 }
                 if (i == data.Length - 1) Completed?.Invoke();        // вызов WritingCompleted
             }
         }
 
         // ниже 2 типа события
-        // WritingPerformed достигнут прогресс записи, кратный кратный параметру percentageToFireEvent
-        public Action<float> WritingPerformed;
-        public event Action<float> Performed;
+        // 1. Performed достигнут прогресс записи, кратный кратный параметру percentageToFireEvent
+        // и событие и делегат записаны в 1 строку - !!!СПОСОБ С ПЕРЕДАЧЕЙ ДАННЫХ В АРГУМЕНТЕ СОБСТВЕННОГО ТИПА InfoDownload!!!
+        public event EventHandler<InfoDownload> Performed;
 
-        // WritingCompleted достигнут конец записи.
-        public Action WritingCompleted;
-        public event Action Completed;
+        // 2. Completed достигнут конец записи - способ использования объявленных делегатов для событий
+        public Action WritingCompleted;     // делеаг для события
+        public event Action Completed;      // событие, в котором будет использоваться делегат выше
+    }
+
+    // класс, для передачи данных о событии   !!!ОБЯЗАТЕЛЬНО УКАЗАТЬ, ЧТО НАСЛЕДУЕТСЯ ОТ EventArgs!!!
+    class InfoDownload : EventArgs
+    {
+        public float Zagruzka { get;}
+        public InfoDownload(float zagruzka)
+        {
+            Zagruzka = zagruzka;
+        }
     }
 
     class Program
@@ -53,17 +59,20 @@ namespace HomeWork17
 
             var writer = new FileWriterWithProgress();
 
-            writer.WritingPerformed = (persent) => { Console.WriteLine($"Достигнут прогресс записи = {persent*100}%;"); };
-            writer.Performed += writer.WritingPerformed;
+            writer.Performed += StWritingPerformed; // подписались на событие "процесса загрузки" обработчиком, СООТВЕТСТВУЮЩИМ СИГНАТУРЕ ДЕЛЕГАТА EventHandler<InfoDownload>
 
             writer.WritingCompleted = () => Console.WriteLine("Достигнут конец записи.");
             writer.Completed += writer.WritingCompleted;
 
             writer.WriteBytes("log.txt", ArrayForFile, 0.1f);
         }
+
+        // обработчик с нужной сигнатурой для EventHandler<InfoDownload> // !!!ОБЯЗАТЕЛЬНО УКАЗАТЬ СОБСТВЕННЫЙ ТИП АРГУМЕНТА InfoDownload!!!
+        private static void StWritingPerformed(object sender, InfoDownload persent) =>
+            Console.WriteLine($"Достигнут прогресс записи = {persent.Zagruzka};");
+
     }
 }
 
 
-
-// Math.Round(chislo, kolvoZnakov, MidpointRounding.AwayFromZero)
+// Math.Round(chislo, kolvoZnakov, MidpointRounding.AwayFromZero) - округление обычное математическое, а не банковское
