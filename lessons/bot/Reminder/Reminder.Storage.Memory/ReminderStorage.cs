@@ -30,7 +30,7 @@ namespace Reminder.Storage.Memory
         /// <summary>
         /// Метод добавления напоминалок в память=словарь. Часть реализации интерфейса
         /// </summary>
-        /// <param name="item"></param>
+        /// <param name="item">передаваемый объект напоминалки</param>
         public void Add(ReminderItem item)
         {
             var result =_items.TryAdd(item.Id, item);
@@ -46,13 +46,16 @@ namespace Reminder.Storage.Memory
             throw new NotImplementedException();
         }
 
-        // пока так
+        /// <summary>
+        /// Метод получения напоминалок из памяти=словаря. Часть реализации интерфейса
+        /// </summary>
+        /// <param name="id">передаваемый id напоминалки</param>
+        /// <returns></returns>
         public ReminderItem Get(Guid id)
         {
             var result = _items.TryGetValue(id, out ReminderItem item);
             if (result) return item;
-            // Надо сделать собственное исключение
-            else throw new Exception($"Не удалось найти id={id} в хранилище");
+            else throw new ReminderItemNotFoundException(id);
         }
 
         public void Update(Guid id)

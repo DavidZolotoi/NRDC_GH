@@ -10,10 +10,14 @@ using System.Threading.Tasks;
 namespace Reminder.Storage.Exceptions
 {
     /// <summary>
-    /// Исключение о том, что напоминалка с таким id уже существует
+    /// Класс исключений о том, что напоминалка с таким id уже существует
     /// </summary>
     public class ReminderItemAlreadyExistsException : Exception
     {
+        /// <summary>
+        /// Создаёт исключение о том, что напоминалка с таким id уже существует
+        /// </summary>
+        /// <param name="id">передаваемый id напоминалки</param>
         public ReminderItemAlreadyExistsException(Guid id) :
             base($"Reminder item with id {id} already exists")      // через базовый конструктор передаем текст исключения
         {
