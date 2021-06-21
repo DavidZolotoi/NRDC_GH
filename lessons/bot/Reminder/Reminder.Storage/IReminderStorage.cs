@@ -25,7 +25,7 @@ namespace Reminder.Storage
         /// Метод, объявленный в интерфейсе IReminderStorage, отвечающий за удаление данных
         /// </summary>
         /// <param name="item">передаваемый объект напоминалки</param>
-        void Delete(Guid id);
+        bool Delete(Guid id);
         /// <summary>
         /// Метод, объявленный в интерфейсе IReminderStorage, отвечающий за получение данных
         /// </summary>

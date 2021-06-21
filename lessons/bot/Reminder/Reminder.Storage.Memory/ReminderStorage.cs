@@ -40,10 +40,15 @@ namespace Reminder.Storage.Memory
             }
         }
 
-
-        public void Delete(Guid id)
+        /// <summary>
+        /// Метод удаления напоминалок из памяти=словаря. Часть реализации интерфейса 
+        /// </summary>
+        /// <param name="id">передаваемый id напоминалки</param>
+        public bool Delete(Guid id)
         {
-            throw new NotImplementedException();
+            var result = _items.Remove(id);
+            if (!result) throw new ReminderItemNotFoundException(id);
+            return true;
         }
 
         /// <summary>
@@ -58,6 +63,7 @@ namespace Reminder.Storage.Memory
             else throw new ReminderItemNotFoundException(id);
         }
 
+        // Тут, судя по всему надо передавать не только АйДи, но и объект
         public void Update(Guid id)
         {
             throw new NotImplementedException();

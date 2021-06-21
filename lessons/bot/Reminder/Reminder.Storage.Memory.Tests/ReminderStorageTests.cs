@@ -10,7 +10,7 @@ namespace Reminder.Storage.Memory.Tests
 {
     class ReminderStorageTests
     {
-        [Test]      // проверка метода добавления
+        [Test]      // проверка метода добавления, получения, удаления
         public void GivenReminder_WhenAdd_ReturnById()
         {
             // 1. создаем объект хранилища со своим функционалом
@@ -21,8 +21,12 @@ namespace Reminder.Storage.Memory.Tests
             storage.Add(item);
             // 4. Получаем из словаря-хранилища то, что добавили
             var found = storage.Get(item.Id);
-            // 5. Суть теста - сравниваем исходное добавленное и полученное из слова напоминалки
+            // 5. Суть проверки добавления и получения - сравниваем исходное добавленное и полученное из слова напоминалки
             Assert.AreEqual(item, found);
+            // 6. Удаляем объект напоминалки, созданной выше
+            var resultDelete = storage.Delete(item.Id);
+            // 7. Суть проверки удаления
+            Assert.AreEqual(resultDelete, true);
         }
 
         [Test]      // проверка выкидывания исключения
@@ -37,5 +41,6 @@ namespace Reminder.Storage.Memory.Tests
             // 4. Суть теста - должно вылететь нужное исключение при работе нужной лямбды (делегата)
             Assert.Catch<ReminderItemAlreadyExistsException>(() => storage.Add(item));
         }
+
     }
 }
