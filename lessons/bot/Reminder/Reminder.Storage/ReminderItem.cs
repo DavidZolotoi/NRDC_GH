@@ -20,7 +20,19 @@ namespace Reminder.Storage
         /// <summary>
         /// Текст напоминалки
         /// </summary>
-        public string Message { get; private set; }
+        public string Message { get; private set; }     // открытый метод, имеющий доступ к редактированию MessageTryUpdate
+        /// <summary>
+        /// Открытый метод, для редактирования закрытого (для редакт.) свойства Message
+        /// </summary>
+        /// <param name="messageNew">передаваемый новый текст для редактирования</param>
+        /// <returns></returns>
+        public bool MessageTryUpdate(string messageNew)
+        {
+            if (string.IsNullOrEmpty(messageNew)) return false; // вместо false можно выкинуть своё исключение
+            // здесь также можно добавить исключения типа старый и новый тексты одинаковые
+            Message = messageNew;
+            return true;
+        }
         /// <summary>
         /// Отправитель/создатель напоминалки
         /// </summary>

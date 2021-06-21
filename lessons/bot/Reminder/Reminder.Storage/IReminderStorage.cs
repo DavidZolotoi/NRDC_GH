@@ -20,7 +20,7 @@ namespace Reminder.Storage
         /// Метод, объявленный в интерфейсе IReminderStorage, отвечающий за обновление данных
         /// </summary>
         /// <param name="item">передаваемый объект напоминалки</param>
-        void Update(Guid id);
+        void Update(ReminderItem item);
         /// <summary>
         /// Метод, объявленный в интерфейсе IReminderStorage, отвечающий за удаление данных
         /// </summary>

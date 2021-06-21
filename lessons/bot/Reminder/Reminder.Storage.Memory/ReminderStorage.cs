@@ -28,7 +28,8 @@ namespace Reminder.Storage.Memory
         }
 
         /// <summary>
-        /// Метод добавления напоминалок в память=словарь. Часть реализации интерфейса
+        /// Метод добавления напоминалок в память=словарь. Часть реализации интерфейса.
+        /// Результат либо true либо исключение ReminderItemAlreadyExistsException
         /// </summary>
         /// <param name="item">передаваемый объект напоминалки</param>
         public void Add(ReminderItem item)
@@ -41,18 +42,20 @@ namespace Reminder.Storage.Memory
         }
 
         /// <summary>
-        /// Метод удаления напоминалок из памяти=словаря. Часть реализации интерфейса 
+        /// Метод удаления напоминалок из памяти=словаря. Часть реализации интерфейса.
+        /// Результат либо true либо исключение ReminderItemNotFoundException
         /// </summary>
         /// <param name="id">передаваемый id напоминалки</param>
         public bool Delete(Guid id)
         {
             var result = _items.Remove(id);
             if (!result) throw new ReminderItemNotFoundException(id);
-            return true;
+            return result;
         }
 
         /// <summary>
-        /// Метод получения напоминалок из памяти=словаря. Часть реализации интерфейса
+        /// Метод получения напоминалок из памяти=словаря. Часть реализации интерфейса.
+        /// Результат либо напоминалка либо исключение ReminderItemNotFoundException
         /// </summary>
         /// <param name="id">передаваемый id напоминалки</param>
         /// <returns></returns>
@@ -63,10 +66,17 @@ namespace Reminder.Storage.Memory
             else throw new ReminderItemNotFoundException(id);
         }
 
-        // Тут, судя по всему надо передавать не только АйДи, но и объект
-        public void Update(Guid id)
+        /// <summary>
+        /// Метод обновления напоминалки в памяти=словаре. Часть реализации интерфейса.
+        /// Уведомления об успехе - нет. Если что-то пойдет не так, то исключения (ReminderItemNotFoundException/ReminderItemAlreadyExistsException)
+        /// </summary>
+        /// <param name="item">передаваемая напоминалка</param>
+        public void Update(ReminderItem item)
         {
-            throw new NotImplementedException();
+            // удаляем старую версию напоминалки, если такого Id нет, то выдаст исключение ReminderItemNotFoundException
+            Delete(item.Id);
+            // добавляем обновленную, если будут проблемы с добавлением, то выдаст исключение ReminderItemAlreadyExistsException
+            Add(item);
         }
     }
 }
