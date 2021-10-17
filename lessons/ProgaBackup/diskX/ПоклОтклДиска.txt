@@ -1,0 +1,4 @@
+Подклчение диска
+subst X: C:\Users\User\InordicKurs\lessons\ProgaBackup\diskX
+Отключение\
+subst X: /d
